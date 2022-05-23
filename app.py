@@ -10,6 +10,7 @@ import ObjectRecognition
 app = Flask(__name__)
 obrModel = ObjectRecognition.ObjectRecogintion()
 
+
 class ObjectAPI(MethodView):
     def get(self):
         url2 = "https://media.decathlon.tw/media/catalog/product/7/3/737c48d1-1bda-4bb6-b170-ed52d114d22c_8519380.jpg"
@@ -19,8 +20,13 @@ class ObjectAPI(MethodView):
         print(image2)
         imgPrediction = obrModel.predict(image2)
         print(imgPrediction)
+        # return Response(
+        #     json.dumps({'imagePrediction': imgPrediction['classname']}),
+        #     mimetype='application/json'
+        # )
         return Response(
-            json.dumps({'imagePrediction': imgPrediction['classname']}),
+            json.dumps({'imgResult': imgPrediction['imgResult'],
+                        'imgDetail': imgPrediction['classname']}),
             mimetype='application/json'
         )
 
@@ -31,22 +37,28 @@ class ObjectAPI(MethodView):
 
         # transform img format to 3d array
         try:
-            image = np.asarray(bytearray(imageData), dtype='uint8')
-            imgPrediction = obrModel.predict(image)  # activate obr model
+            # image = np.asarray(bytearray(imageData), dtype='uint8')
+            imgPrediction = obrModel.predict(imageData)  # activate obr model
             print(imgPrediction)
+            # return Response(
+            #     json.dumps({'imgResult': imgPrediction['imgResult'],
+            #                 'imgDetail': imgPrediction['classname']}),
+            #     mimetype='application/json'
+            # )
             return Response(
                 json.dumps({'imgResult': imgPrediction['imgResult'],
                             'imgDetail': imgPrediction['classname'],
-                             'itemTypeLevel1Id': imgPrediction['itemTypeLevel1Id']}),
+                             'itemTypeLevel2Id': imgPrediction['imgResult']}),
                 mimetype='application/json'
             )
         except:
             return Response(
                 json.dumps({'imgResult': '0',
                             'imgDetail': '',
-                            'itemTypeLevel1Id': '0'}),
+                            'itemTypeLevel2Id': '0'}),
                 mimetype='application/json'
             )
+
 
 app.add_url_rule('/objectRecognition/',
                  view_func=ObjectAPI.as_view('objectRecognition'))
