@@ -2,7 +2,6 @@ from flask import Flask, request, Response
 from flask.views import MethodView
 import urllib
 import numpy as np
-import cv2
 import json
 import sys
 import ObjectRecognition
@@ -33,11 +32,6 @@ class ObjectAPI(MethodView):
             image = np.asarray(bytearray(imageData), dtype='uint8')
             imgPrediction = obrModel.predict(image)  # activate obr model
             print(imgPrediction)
-            # return Response(
-            #     json.dumps({'imgResult': imgPrediction['imgResult'],
-            #                 'imgDetail': imgPrediction['classname']}),
-            #     mimetype='application/json'
-            # )
             return Response(
                 json.dumps({'imgResult': imgPrediction['imgResult'],
                             'imgDetail': imgPrediction['classname']}),

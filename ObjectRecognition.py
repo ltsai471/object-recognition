@@ -198,19 +198,11 @@ inclusionList = [
     # "scissors",
     # "paper", "mirror", "towel", "mouse", "keyboard", "skateboard", "handbag", "tie", "baseball", "bicycle"
 ]
-<<<<<<< HEAD
 numberObjectMap = {
     "unlabeled": 27, "bicycle": 26, "shoe": 12, "hat": 13, "backpack": 15, "umbrella": 28,
     "handbag": 16, "tie": 17, "baseball": 20, "skateboard": 21, "tennis": 22, "bottle": 19, "book": 4,
     "cup": 23, "laptop": 7, "mouse": 8, "keyboard": 9, "cell phone": 6, "scissors": 18, "cloth": 14,
     "paper": 5, "mirror": 25
-=======
-numberObjectMap={
-    "unlabeled":27, "bicycle":26, "shoe":12, "hat":13, "backpack":15, "umbrella":28,
-    "handbag":16, "tie":17, "baseball":20, "skateboard":21, "tennis":22, "bottle":19, "book":4,
-    "cup":23, "laptop":7, "mouse":8, "keyboard":9, "cell phone":6, "scissors":18, "cloth":14,
-    "paper":5, "mirror":25
->>>>>>> a7c326edb0f5e1499ecd40d45af6269001a1be62
 }
 
 
