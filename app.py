@@ -33,6 +33,11 @@ class ObjectAPI(MethodView):
             image = np.asarray(bytearray(imageData), dtype='uint8')
             imgPrediction = obrModel.predict(image)  # activate obr model
             print(imgPrediction)
+            # return Response(
+            #     json.dumps({'imgResult': imgPrediction['imgResult'],
+            #                 'imgDetail': imgPrediction['classname']}),
+            #     mimetype='application/json'
+            # )
             return Response(
                 json.dumps({'imgResult': imgPrediction['imgResult'],
                             'imgDetail': imgPrediction['classname']}),
