@@ -1,9 +1,7 @@
 import urllib.request
-import os
 import numpy as np
 from six import BytesIO
 from PIL import Image
-
 import tensorflow as tf
 import tensorflow_hub as hub
 
@@ -193,11 +191,18 @@ LabelMap = {
     182: "wood"
 }
 inclusionList = [
-    "unlabeled", "bicycle", "shoe", "hat", "backpack", "umbrella",
-    "handbag", "tie", "baseball", "skateboard", "tennis", "bottle", "book",
-    "cup", "laptop", "mouse", "keyboard", "cell phone", "scissors", "cloth",
-    "paper", "mirror", "towel"
+    "unlabeled", "shoe", "hat", "backpack", "umbrella",
+    "tennis", "bottle", "book",
+    "cup", "laptop", "cell phone", "cloth",
+    # "scissors",
+    # "paper", "mirror", "towel", "mouse", "keyboard", "skateboard", "handbag", "tie", "baseball", "bicycle"
 ]
+numberObjectMap = {
+    "unlabeled": 27, "bicycle": 26, "shoe": 12, "hat": 13, "backpack": 15, "umbrella": 28,
+    "handbag": 16, "tie": 17, "baseball": 20, "skateboard": 21, "tennis": 22, "bottle": 19, "book": 4,
+    "cup": 23, "laptop": 7, "mouse": 8, "keyboard": 9, "cell phone": 6, "scissors": 18, "cloth": 14,
+    "paper": 5, "mirror": 25
+}
 
 
 def loadImageIntoNumpyArray(imageData):
@@ -214,8 +219,6 @@ class ObjectRecogintion:
         # 'CenterNet HourGlass104 Keypoints 512x512'
         self.hubModel = hub.load(
             "https://tfhub.dev/tensorflow/centernet/hourglass_512x512/1")
-        # path = r"./"
-        # self.hubModel = tf.saved_model.load(path, tags=None, options=None)
         return
 
     def predict(self, imageData):
@@ -226,25 +229,32 @@ class ObjectRecogintion:
         imageNp = loadImageIntoNumpyArray(imageData)
         results = self.hubModel(imageNp)
         result = {key: value.numpy() for key, value in results.items()}
-        prediction = {"classname": "unlabeled", "score": 0}
+        itemTypeLevel2Id = numberObjectMap["unlabeled"]
+        # itemTypeLevel2=ItemTypeLevel2.objects.get(level2Id=itemTypeLevel2Id)
+        # prediction = {"classname": "unlabeled", "score": 0,"itemTypeLevel1Id":itemTypeLevel2.level1Id.level1Id,"imgResult":itemTypeLevel2Id}
+        prediction = {"classname": "unlabeled",
+                      "score": 0, "imgResult": itemTypeLevel2Id}
         for i in range(result["detection_classes"][0].size):
             label = result["detection_classes"][0][i]
             score = result['detection_scores'][0][i]
             if LabelMap[label] in inclusionList and score > 0.7:
-                prediction = {"classname": LabelMap[label], "score": score}
+                itemTypeLevel2Id = numberObjectMap[LabelMap[label]]
+                # itemTypeLevel2=ItemTypeLevel2.objects.get(level2Id=itemTypeLevel2Id)
+                # prediction = {"classname": LabelMap[label], "score": score,"itemTypeLevel1Id":itemTypeLevel2.level1Id.level1Id,"imgResult":itemTypeLevel2Id}
+                prediction = {
+                    "classname": LabelMap[label], "score": score, "imgResult": itemTypeLevel2Id}
                 return prediction
         return prediction
 
 
 def test():
     # read the image url
-    url = 'https://farm9.staticflickr.com/8430/7781451712_62fdfd0532_z.jpg'
+    url = 'https://shop.r10s.jp/komiyakasa/cabinet/komiyashoten/women/kasane/imgrc0079149018.jpg'
     resp = urllib.request.urlopen(url)
     # read image as an numpy array
     image = np.asarray(bytearray(resp.read()), dtype="uint8")
     obr = ObjectRecogintion()
     prediction = obr.predict(image)
-    "{'classname': 'unlabeled', 'score': 0}"
+
     print(prediction)
     return
-
