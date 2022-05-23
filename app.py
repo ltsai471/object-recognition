@@ -36,7 +36,7 @@ class ObjectAPI(MethodView):
     def post(self):
         req = request.get_json()
         imgType = req['imgType']
-        imageData = req['imageData']
+        imageData = req['image']
         try:
             image = np.asarray(bytearray(imageData), dtype='uint8')
             # if imgType == 1:
