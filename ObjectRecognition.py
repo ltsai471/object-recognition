@@ -206,7 +206,6 @@ numberObjectMap = {
 
 
 def loadImageIntoNumpyArray(imageData):
-
     image = Image.open(BytesIO(imageData))
     (imWidth, imHeight) = image.size
     return np.array(image.getdata()).reshape(
@@ -214,7 +213,6 @@ def loadImageIntoNumpyArray(imageData):
 
 
 class ObjectRecogintion:
-
     def __init__(self):
         # 'CenterNet HourGlass104 Keypoints 512x512'
         self.hubModel = hub.load(
